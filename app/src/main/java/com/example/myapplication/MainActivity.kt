@@ -5,10 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
@@ -26,24 +29,37 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Column(modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color.Blue).padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Bottom)
+          Box(modifier = Modifier
+              .background(color = Color.Green)
+              .fillMaxWidth().height(200.dp),
+              contentAlignment = Alignment.TopEnd){
+              Text(text = "hello ")
+              Box (modifier =  Modifier.fillMaxSize().padding(16.dp),
+                  contentAlignment =  Alignment.BottomEnd){
 
-                    {
-                        Text("안녕하세용11")
-                        Text("안녕하세용1231")
-                    }
+                  Text(text = "1456464566523 ")
+              }
+          }
 
-
-                }
-            }
-        }
     }
 }
 
+@Composable
+fun  Greeting(name:String){
+        Text(text = "hello $name!")
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreivew(){
+    MyApplicationTheme{
+        Greeting("성공")
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreivew2(){
+    MyApplicationTheme{
+        Greeting("성공")
+    }
+}}

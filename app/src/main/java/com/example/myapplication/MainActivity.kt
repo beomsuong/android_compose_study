@@ -3,12 +3,22 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,41 +29,104 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ImageCard()
-
-        }
-    }
-
-    @Composable
-    fun ImageCard() {
-        Card(
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Box(modifier = Modifier.height(200.dp)) {
-
-
+            MyApplicationTheme {
+                MyApp()
             }
         }
     }
 
     @Composable
-    fun Greeting(name: String) {
-        Text(text = "hello $name!")
-    }
+    fun MyApp(modifier: Modifier = Modifier) {
+        var shouldShowOnboarding by remember { mutableStateOf(true) }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreivew() {
-        MyApplicationTheme {
-            Greeting("성공")
+        Surface(modifier) {
+            if (shouldShowOnboarding) {
+                OnboardingScreen(onContinueClicked = { shouldShowOnboarding = false })
+            } else {
+                Greetings(
+                    shouldShowOnboarding = shouldShowOnboarding,
+                    onShowOnboardingChange = { shouldShowOnboarding = it })
+            }
         }
     }
 
-    @Preview(showBackground = true)
     @Composable
-    fun DefaultPreivew2() {
-        MyApplicationTheme {
-            Greeting("성공")
+    fun OnboardingScreen(
+        onContinueClicked: () -> Unit,
+        modifier: Modifier = Modifier
+    ) {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Welcome to the Basics Codelab!")
+            Button(
+                modifier = Modifier.padding(vertical = 24.dp),
+                onClick = onContinueClicked
+            ) {
+                Text("Continue")
+            }
+        }
+    }
+
+    @Composable
+    private fun Greetings(
+        shouldShowOnboarding: Boolean,
+        onShowOnboardingChange: (Boolean) -> Unit,
+        modifier: Modifier = Modifier,
+        names: List<String> = listOf("World", "Compose")
+    ) {
+        Column(modifier = modifier.padding(vertical = 4.dp)) {
+            for (name in names) {
+                Greeting(
+                    name = name,
+                    shouldShowOnboarding = shouldShowOnboarding,
+                    onShowOnboardingChange = onShowOnboardingChange
+                )
+            }
+        }
+    }
+
+    @Preview(showBackground = true, widthDp = 320, heightDp = 320)
+    @Composable
+    fun OnboardingPreview() {
+        OnboardingScreen(onContinueClicked = {})
+    }
+
+    @Composable
+    fun Greeting(
+        name: String,
+        shouldShowOnboarding: Boolean,
+        onShowOnboardingChange: (Boolean) -> Unit,
+        modifier: Modifier = Modifier
+    ) {
+        var expanded by remember { mutableStateOf(false) }
+
+        val extraPadding = if (expanded) 48.dp else 0.dp
+
+        Surface(
+            color = MaterialTheme.colorScheme.primary,
+            modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+        ) {
+            Row(modifier = Modifier.padding(24.dp)) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(bottom = extraPadding)
+                ) {
+                    Text(text = "Hello, ")
+                    Text(text = name)
+                }
+                ElevatedButton(
+                    onClick = {
+                        expanded = !expanded
+                        onShowOnboardingChange(!shouldShowOnboarding)
+                    }
+                ) {
+                    Text(if (expanded) "Show less" else "Show more")
+                }
+            }
         }
     }
 }
